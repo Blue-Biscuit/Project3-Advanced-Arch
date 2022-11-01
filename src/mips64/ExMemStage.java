@@ -23,7 +23,6 @@ public class ExMemStage {
         switch (opcode) {
             case Instruction.INST_ADD:
             case Instruction.INST_ADDI:
-            case Instruction.INST_J:
             case Instruction.INST_BEQ:
             case Instruction.INST_BNE:
             case Instruction.INST_BLTZ:
@@ -32,6 +31,10 @@ public class ExMemStage {
             case Instruction.INST_BGTZ:
             case Instruction.INST_JR:
             case Instruction.INST_JAL:
+            case Instruction.INST_JALR:
+            case Instruction.INST_J:
+            case Instruction.INST_LW:
+            case Instruction.INST_SW:
                 aluIntData = aluTopInput(opcode) + aluBottomInput(opcode);
                 break;
             case Instruction.INST_SUB:
