@@ -10,7 +10,6 @@ public class IdExStage {
     int regBData;
     int immediate;
     Instruction instr;
-    int outALU; // The value which the ALU is outputting.
 
     public IdExStage(PipelineSimulator sim) {
         simulator = sim;
@@ -28,35 +27,16 @@ public class IdExStage {
         opcode = simulator.ifId.opcode;
         instr = simulator.ifId.instr;
         
-        // Switch by opcode.
-        switch(opcode) {
-            case Instruction.INST_ADDI:
-                fetchOperandsImmediateArithmetic((ITypeInst)instr);
-                outALU = regAData + immediate;
-                break;
-            case Instruction.INST_ANDI:
-                fetchOperandsImmediateArithmetic((ITypeInst)instr);
-                outALU = regAData & immediate;
-                break;
-            case Instruction.INST_ORI:
-                fetchOperandsImmediateArithmetic((ITypeInst)instr);
-                outALU = regAData | immediate;
-                break;
-            case Instruction.INST_XORI:
-                fetchOperandsImmediateArithmetic((ITypeInst)instr);
-                outALU = regAData ^ immediate;
-                break;
+        // Load fields depending on the type of instruction format.
+        if (instr instanceof ITypeInst) {
+            ITypeInst iInst = (ITypeInst)instr;
+            regAData = iInst.getRS();
+            regBData = iInst.getRT();
+            immediate = iInst.getImmed();
+        }
+        else if (instr instanceof RTypeInst) {
+            RTypeInst rInst = (RTypeInst)instr;
         }
     }
     
-    /**
-     * Fetches the operands for an immediate arithmetic instruction.
-     * @param instr The I-type instruction.
-     */
-    private void fetchOperandsImmediateArithmetic(ITypeInst instr) {
-        regAData = instr.getRS();
-        immediate = instr.getImmed();
-        
-        // TODO: forwarding logic
-    }
 }

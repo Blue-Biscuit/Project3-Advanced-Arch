@@ -10,7 +10,6 @@ public class IfIdStage {
 
   public IfIdStage(PipelineSimulator sim) {
     simulator = sim;
-
   }
 
   public void update() {
