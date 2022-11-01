@@ -14,5 +14,9 @@ public class ExMemStage {
     }
 
     public void update() {
+        // Set the instruction values of this pipeline reg to the values of the 
+        // previous (ID/EX).
+        instPC = simulator.idEx.instPC;
+        opcode = simulator.idEx.opcode;
     }
 }

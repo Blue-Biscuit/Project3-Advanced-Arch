@@ -20,5 +20,9 @@ public class IdExStage {
     }
 
     public void update() {
+        // Set the instruction values of this pipeline reg to the values of the 
+        // previous (IF/ID).
+        instPC = simulator.ifId.instPC;
+        opcode = simulator.ifId.opcode;
     }
 }
