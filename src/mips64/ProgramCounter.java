@@ -23,5 +23,7 @@ public class ProgramCounter {
   }
 
   public void update() {
+      // Increment the program counter to the next MAU.
+      incrPC();
   }
 }

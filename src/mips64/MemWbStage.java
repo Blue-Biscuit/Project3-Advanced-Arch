@@ -19,5 +19,9 @@ public class MemWbStage {
     }
 
     public void update() {
+        // Set the instruction values of this pipeline reg to the values of the 
+        // previous (EX/MEM).
+        instPC = simulator.exMem.instPC;
+        opcode = simulator.exMem.opcode;
     }
 }
