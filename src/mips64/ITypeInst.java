@@ -3,8 +3,8 @@ package mips64;
 public class ITypeInst
         extends Instruction {
 
-    int opcode;
-    int rs;
+    int opcode; // The opcode for the instruction.
+    int rs; // 
     int rt;
     int immed;
 

@@ -5,6 +5,7 @@ public class IfIdStage {
   int instPC;
   int opcode;
   Instruction instr;
+  
 
 
   public IfIdStage(PipelineSimulator sim) {

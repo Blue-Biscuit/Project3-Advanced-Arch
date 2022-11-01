@@ -18,5 +18,6 @@ public class ExMemStage {
         // previous (ID/EX).
         instPC = simulator.idEx.instPC;
         opcode = simulator.idEx.opcode;
+        aluIntData = simulator.idEx.outALU;
     }
 }
