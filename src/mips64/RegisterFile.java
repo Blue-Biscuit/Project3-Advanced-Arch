@@ -37,13 +37,13 @@ public class RegisterFile {
      * @return The MIPS register file.
      */
     public static RegisterFile getMIPSRegisterFile() {
-        final int MIPS_REGS_LEN = 31; // The number of regs in MIPS
+        final int MIPS_REGS_LEN = 32; // The number of regs in MIPS
         
         // Generate the registers.
         Register[] regs = new Register[MIPS_REGS_LEN];
         
         for (int i = 0; i < MIPS_REGS_LEN; i++) {
-            regs[i] = new Register("R" + (i + 1));
+            regs[i] = new Register("R" + i);
         }
         
         // Call constructor.

@@ -9,7 +9,13 @@ public class IdExStage {
     int regAData;
     int regBData;
     int immediate;
+    
+    Register regA;
+    Register regB;
+    Register regResult;
+
     Instruction instr;
+
 
     public IdExStage(PipelineSimulator sim) {
         simulator = sim;
@@ -17,7 +23,7 @@ public class IdExStage {
 
     int getIntRegister(int regNum) {
         // todo - add supporting code
-        return 0;
+        return this.simulator.regFile.get("R" + regNum).getValue();
     }
 
     public void update() {
@@ -32,10 +38,28 @@ public class IdExStage {
             ITypeInst iInst = (ITypeInst)instr;
             regAData = iInst.getRS();
             regBData = iInst.getRT();
+            
+            regA = this.simulator.regFile.get("R" + iInst.getRS());
+            regB = this.simulator.regFile.get("R" + iInst.getRT());
+            regResult = regB;
+            
+            regAData = regA.getValue();
+            regBData = regB.getValue();
+            
             immediate = iInst.getImmed();
         }
         else if (instr instanceof RTypeInst) {
             RTypeInst rInst = (RTypeInst)instr;
+            regResult = this.simulator.regFile.get("R" + rInst.getRD());
+            regA = this.simulator.regFile.get("R" + rInst.getRS());
+            regB = this.simulator.regFile.get("R" + rInst.getRT());
+            
+            regAData = regA.getValue();
+            regBData = regB.getValue();
+        }
+        else if (instr instanceof JTypeInst) {
+            JTypeInst jInst = (JTypeInst)instr;
+            immediate = jInst.getOffset();
         }
     }
     

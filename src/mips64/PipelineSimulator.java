@@ -17,7 +17,8 @@ public class PipelineSimulator {
     ExMemStage exMem;
     MemWbStage memWb;
     
-    Register[] regs = new Register[32];
+    RegisterFile regFile;
+
 
     int breakAddress = -1;
     boolean quietMode = true;
@@ -192,6 +193,7 @@ public class PipelineSimulator {
       memWb = new MemWbStage(this);
       pc.setPC(0);
       instExec = 0;
+      this.regFile = RegisterFile.getMIPSRegisterFile();
     }
 
     public void loadMemory() {
@@ -255,8 +257,6 @@ public class PipelineSimulator {
     }
 
     public void run() {
-      initRegisters();
-      
       while (!memWb.isHalted()) {
         step();
       }
@@ -264,13 +264,6 @@ public class PipelineSimulator {
         dumpStatus();
       }
       System.out.println("Total instructions executed = " + instExec);
-    }
-    
-    public void initRegisters() {
-        for (int i = 1; i <= 31; i++) {
-            String name = "R" + i;
-            regs[i - 1] = new Register(name, 0);
-        }
     }
 
     public void step() {
