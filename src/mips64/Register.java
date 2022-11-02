@@ -5,27 +5,56 @@
 package mips64;
 
 /**
- * An integer register on the architecture.
+ * A single integer register in the register file.
  * @author ahuffman
  */
 public class Register {
-    private String _name;
-    private int _val;
+    private String name;
+    private int value;
     
-    public Register(String name, int val) {
-        this._name = name;
-        this._val = val;
+    /**
+     * Initializes a register.
+     * @param name The name of the register.
+     * @param value The 32-bit register value.
+     */
+    public Register(String name, int value) {
+        if (name == null) {
+            throw new NullPointerException("Parameter 'name' was null.");
+        }
+        
+        this.name = name;
+        this.value = value;
     }
     
+    /**
+     * Initializes a register with a zero-value.
+     * @param name The name of the register.
+     */
+    public Register(String name) {
+        this(name, 0);
+    }
+    
+    /**
+     * Gets the name of the register.
+     * @return The name.
+     */
     public String getName() {
-        return _name;
+        return this.name;
     }
     
-    public int getVal() {
-        return _val;
+    /**
+     * Gets the value of the register.
+     * @return The value.
+     */
+    public int getValue() {
+        return this.value;
     }
     
-    public void setVal(int v) {
-        _val = v;
+    /**
+     * Sets the value of the register.
+     * @param value The value.
+     */
+    public void setValue(int value) {
+        this.value = value;
     }
 }
