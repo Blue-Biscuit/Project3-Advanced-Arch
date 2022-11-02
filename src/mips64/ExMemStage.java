@@ -126,7 +126,7 @@ public class ExMemStage {
     private int aluTopInput(int opcode) {
         
         if (isBranching(opcode)) {
-            return simulator.idEx.instPC + 4;
+            return instPC + 4;
         }
         else {
             return (regA == null) ? 0 : regA.getValue();

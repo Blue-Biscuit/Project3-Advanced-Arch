@@ -96,7 +96,7 @@ public class MemWbStage {
             }
             
             if (opcode == Instruction.INST_JAL || opcode == Instruction.INST_JALR) {
-                simulator.regFile.get("R31").setValue(simulator.pc.getPC() + 4);
+                simulator.regFile.get("R31").setValue(instPC + 4);
             }
         }
         else if (isBranching(opcode)) {
