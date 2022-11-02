@@ -19,6 +19,7 @@ public class PipelineSimulator {
     
     RegisterFile regFile;
 
+
     int breakAddress = -1;
     boolean quietMode = true;
     int instExec = 0;
@@ -256,6 +257,7 @@ public class PipelineSimulator {
     }
 
     public void run() {
+      initRegisters();
       
       while (!memWb.isHalted()) {
         step();
@@ -264,6 +266,13 @@ public class PipelineSimulator {
         dumpStatus();
       }
       System.out.println("Total instructions executed = " + instExec);
+    }
+    
+    public void initRegisters() {
+        for (int i = 1; i <= 31; i++) {
+            String name = "R" + i;
+            regs[i - 1] = new Register(name, 0);
+        }
     }
 
     public void step() {
