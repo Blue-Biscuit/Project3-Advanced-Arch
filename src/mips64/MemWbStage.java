@@ -125,7 +125,6 @@ public class MemWbStage {
         return !(isBranching(opcode) 
                 || opcode == Instruction.INST_NOP 
                 || opcode == Instruction.INST_HALT
-                || opcode == Instruction.INST_SW
-                || opcode == Instruction.INST_LW);
+                || opcode == Instruction.INST_SW);
     }
 }
