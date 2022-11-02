@@ -10,6 +10,7 @@ public class MemWbStage {
     int aluIntData;
     int loadIntData;
     
+    Register regA;
     Register regB;
     Register regResult;
     
@@ -33,6 +34,7 @@ public class MemWbStage {
         instPC = simulator.exMem.instPC;
         opcode = simulator.exMem.opcode;
         aluIntData = simulator.exMem.aluIntData;
+        regA = simulator.exMem.regA;
         regB = simulator.exMem.regB;
         regResult = simulator.exMem.regResult;
         shouldWriteback = simulator.exMem.shouldWriteback;
@@ -42,9 +44,10 @@ public class MemWbStage {
 
             loadMem();
             storeMem();
-        
-            // Write back to register.
-            writeBack();
+            if (writesBack()) {
+                writeBack();
+            }
+            resolveBranch();
         }
         
     }
@@ -72,5 +75,56 @@ public class MemWbStage {
         }
         
         regResult.setValue(toWB);
+    }
+    
+    /**
+     * Resolves a branching instruction.
+     */
+    private void resolveBranch() {
+        if (simulator.exMem.branching) {
+            System.out.println("Branch was taken.");
+            // "Squash" the previous instructions.
+            simulator.idEx.shouldWriteback = false;
+            simulator.ifId.shouldWriteback = false;
+            
+            // Load the new PC value.
+            if (opcode == Instruction.INST_JR || opcode == Instruction.INST_JALR) {
+                simulator.pc.setPC(regA.getValue());
+            }
+            else {
+                simulator.pc.setPC(aluIntData);
+            }
+            
+            if (opcode == Instruction.INST_JAL || opcode == Instruction.INST_JALR) {
+                simulator.regFile.get("R31").setValue(instPC + 4);
+            }
+        }
+        else if (isBranching(opcode)) {
+            System.out.println("Branch was not taken.");
+        }
+    }
+    
+    private boolean isBranching(int opcode) {
+        return (opcode == Instruction.INST_BEQ) 
+                || (opcode == Instruction.INST_BNE)
+                || (opcode == Instruction.INST_BLTZ)
+                || (opcode == Instruction.INST_BLEZ)
+                || (opcode == Instruction.INST_BGEZ)
+                || (opcode == Instruction.INST_BGTZ)
+                || (opcode == Instruction.INST_J)
+                || (opcode == Instruction.INST_JR)
+                || (opcode == Instruction.INST_JALR)
+                || (opcode == Instruction.INST_JAL);
+    }
+    
+    /**
+     * True if the opcode is an instruction which writes to register.
+     * @return 
+     */
+    private boolean writesBack() {
+        return !(isBranching(opcode) 
+                || opcode == Instruction.INST_NOP 
+                || opcode == Instruction.INST_HALT
+                || opcode == Instruction.INST_SW);
     }
 }

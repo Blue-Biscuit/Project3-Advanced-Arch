@@ -13,7 +13,10 @@ public class ExMemStage {
     Register regB;
     Register regResult;
     
-    boolean raZero = false; // The "Zero?" Block on the diagram.
+    /**
+     * True if the instruction is a taken branch.
+     */
+    boolean branching = false;
     
 
     public ExMemStage(PipelineSimulator sim) {
@@ -33,14 +36,33 @@ public class ExMemStage {
         runALU();
         
         if (shouldWriteback) {
-            if (regA != null) {
-                raZero = regA.getValue() == 0;
-            }
+            branching = branchWasTaken();
         }
     }
     
     public boolean branchWasTaken() {
-        return raZero;
+       
+        switch (opcode) {
+            case Instruction.INST_BEQ:
+                return regA.getValue() == regB.getValue();
+            case Instruction.INST_BNE:
+                return regA.getValue() != regB.getValue();
+            case Instruction.INST_BLTZ:
+                return regA.getValue() < 0;
+            case Instruction.INST_BLEZ:
+                return regA.getValue() <= 0;
+            case Instruction.INST_BGEZ:
+                return regA.getValue() >= 0;
+            case Instruction.INST_BGTZ:
+                return regA.getValue() > 0;
+            case Instruction.INST_J:
+            case Instruction.INST_JR:
+            case Instruction.INST_JAL:
+            case Instruction.INST_JALR:
+                return true;
+            default:
+                return false;
+        }
     }
     
     void runALU() {
@@ -104,7 +126,7 @@ public class ExMemStage {
     private int aluTopInput(int opcode) {
         
         if (isBranching(opcode)) {
-            return simulator.idEx.instPC + 4;
+            return instPC + 4;
         }
         else {
             return (regA == null) ? 0 : regA.getValue();
@@ -134,16 +156,23 @@ public class ExMemStage {
                 || (opcode == Instruction.INST_XOR)
                 || (opcode == Instruction.INST_SLL)
                 || (opcode == Instruction.INST_SRL)
-                || (opcode == Instruction.INST_SRA);
+                || (opcode == Instruction.INST_SRA)
+                || isBranching(opcode)
+                || (opcode == Instruction.INST_LW)
+                || (opcode == Instruction.INST_SW);
     }
     
-    private boolean isBranching(int opcode) {
+     private boolean isBranching(int opcode) {
         return (opcode == Instruction.INST_BEQ) 
                 || (opcode == Instruction.INST_BNE)
                 || (opcode == Instruction.INST_BLTZ)
                 || (opcode == Instruction.INST_BLEZ)
                 || (opcode == Instruction.INST_BGEZ)
-                || (opcode == Instruction.INST_BGTZ);
+                || (opcode == Instruction.INST_BGTZ)
+                || (opcode == Instruction.INST_J)
+                || (opcode == Instruction.INST_JR)
+                || (opcode == Instruction.INST_JALR)
+                || (opcode == Instruction.INST_JAL);
     }
     
 }
