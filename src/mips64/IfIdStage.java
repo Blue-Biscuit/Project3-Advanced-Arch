@@ -6,7 +6,8 @@ public class IfIdStage {
   int opcode;
   Instruction instr;
   
-  boolean shouldWriteback = false; // For propogation.
+  boolean shouldWriteback = false;
+
   
 
 
