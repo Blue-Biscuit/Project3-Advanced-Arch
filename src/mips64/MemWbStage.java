@@ -35,14 +35,15 @@ public class MemWbStage {
         aluIntData = simulator.exMem.aluIntData;
         regB = simulator.idEx.regB;
         regResult = simulator.idEx.regA;
-        
+        shouldWriteback = simulator.idEx.shouldWriteback;
         
         // Get loadIntData
-        loadMem();
-        storeMem();
-        
-        // Write back to register.
         if (shouldWriteback) {
+
+            loadMem();
+            storeMem();
+        
+            // Write back to register.
             writeBack();
         }
         

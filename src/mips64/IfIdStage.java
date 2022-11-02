@@ -6,6 +6,8 @@ public class IfIdStage {
   int opcode;
   Instruction instr;
   
+  boolean shouldWriteback = true; // For propogation.
+  
 
 
   public IfIdStage(PipelineSimulator sim) {
