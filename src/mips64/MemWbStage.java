@@ -73,4 +73,31 @@ public class MemWbStage {
         
         regResult.setValue(toWB);
     }
+    
+    /**
+     * Resolves a branching instruction.
+     */
+    private void resolveBranch() {
+        if (isBranching(opcode) && simulator.exMem.branchWasTaken()) {
+            System.out.println("Branch was taken.");
+            // "Squash" the previous instructions.
+            simulator.idEx.shouldWriteback = false;
+            simulator.ifId.shouldWriteback = false;
+            
+            // Load the new PC value.
+            simulator.pc.pc = aluIntData;
+        }
+        else if (isBranching(opcode)) {
+            System.out.println("Branch was not taken.");
+        }
+    }
+    
+    private boolean isBranching(int opcode) {
+        return (opcode == Instruction.INST_BEQ) 
+                || (opcode == Instruction.INST_BNE)
+                || (opcode == Instruction.INST_BLTZ)
+                || (opcode == Instruction.INST_BLEZ)
+                || (opcode == Instruction.INST_BGEZ)
+                || (opcode == Instruction.INST_BGTZ);
+    }
 }
