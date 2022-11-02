@@ -39,6 +39,11 @@ public class MemWbStage {
         regResult = simulator.exMem.regResult;
         shouldWriteback = simulator.exMem.shouldWriteback;
         
+        // Halt if halt
+        if (opcode == Instruction.INST_HALT) {
+            halted = true;
+        }
+        
         // Get loadIntData
         if (shouldWriteback) {
 
