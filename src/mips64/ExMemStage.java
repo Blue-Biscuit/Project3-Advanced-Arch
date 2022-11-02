@@ -28,11 +28,14 @@ public class ExMemStage {
         regA = simulator.idEx.regA;
         regB = simulator.idEx.regB;
         regResult = simulator.idEx.regResult;
+        shouldWriteback = simulator.idEx.shouldWriteback;
         
         runALU();
         
-        if (regA != null) {
-            raZero = regA.getValue() == 0;
+        if (shouldWriteback) {
+            if (regA != null) {
+                raZero = regA.getValue() == 0;
+            }
         }
     }
     

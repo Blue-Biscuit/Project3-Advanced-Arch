@@ -6,6 +6,9 @@ public class IfIdStage {
   int opcode;
   Instruction instr;
   
+  boolean shouldWriteback = false;
+
+  
 
 
   public IfIdStage(PipelineSimulator sim) {
@@ -15,6 +18,7 @@ public class IfIdStage {
   public void update() {
       // Get the correct PC value.
       instPC = simulator.pc.getPC();
+      shouldWriteback = true;
       
       // Load from program memory the instruction.
       instr = simulator.memory.getInstAtAddr(instPC);
