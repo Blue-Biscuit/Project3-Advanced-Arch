@@ -10,6 +10,7 @@ public class MemWbStage {
     int aluIntData;
     int loadIntData;
     
+    Register regA;
     Register regB;
     Register regResult;
     
@@ -33,6 +34,7 @@ public class MemWbStage {
         instPC = simulator.exMem.instPC;
         opcode = simulator.exMem.opcode;
         aluIntData = simulator.exMem.aluIntData;
+        regA = simulator.exMem.regA;
         regB = simulator.exMem.regB;
         regResult = simulator.exMem.regResult;
         shouldWriteback = simulator.exMem.shouldWriteback;
@@ -86,7 +88,16 @@ public class MemWbStage {
             simulator.ifId.shouldWriteback = false;
             
             // Load the new PC value.
-            simulator.pc.setPC(aluIntData);
+            if (opcode == Instruction.INST_JR || opcode == Instruction.INST_JALR) {
+                simulator.pc.setPC(regA.getValue());
+            }
+            else {
+                simulator.pc.setPC(aluIntData);
+            }
+            
+            if (opcode == Instruction.INST_JAL || opcode == Instruction.INST_JALR) {
+                simulator.regFile.get("R31").setValue(simulator.pc.getPC() + 4);
+            }
         }
         else if (isBranching(opcode)) {
             System.out.println("Branch was not taken.");
