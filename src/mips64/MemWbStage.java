@@ -42,9 +42,10 @@ public class MemWbStage {
 
             loadMem();
             storeMem();
-        
-            // Write back to register.
-            writeBack();
+            if (writesBack()) {
+                writeBack();
+            }
+            resolveBranch();
         }
         
     }
@@ -99,5 +100,13 @@ public class MemWbStage {
                 || (opcode == Instruction.INST_BLEZ)
                 || (opcode == Instruction.INST_BGEZ)
                 || (opcode == Instruction.INST_BGTZ);
+    }
+    
+    /**
+     * True if the opcode is an instruction which writes to register.
+     * @return 
+     */
+    private boolean writesBack() {
+        return !(isBranching(opcode) || opcode == Instruction.INST_NOP || opcode == Instruction.INST_HALT);
     }
 }
