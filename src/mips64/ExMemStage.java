@@ -157,7 +157,9 @@ public class ExMemStage {
                 || (opcode == Instruction.INST_SLL)
                 || (opcode == Instruction.INST_SRL)
                 || (opcode == Instruction.INST_SRA)
-                || isBranching(opcode);
+                || isBranching(opcode)
+                || (opcode == Instruction.INST_LW)
+                || (opcode == Instruction.INST_SW);
     }
     
      private boolean isBranching(int opcode) {
