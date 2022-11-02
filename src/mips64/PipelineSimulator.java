@@ -16,6 +16,8 @@ public class PipelineSimulator {
     IdExStage idEx;
     ExMemStage exMem;
     MemWbStage memWb;
+    
+    RegisterFile regFile;
 
     int breakAddress = -1;
     boolean quietMode = true;
@@ -190,6 +192,7 @@ public class PipelineSimulator {
       memWb = new MemWbStage(this);
       pc.setPC(0);
       instExec = 0;
+      this.regFile = RegisterFile.getMIPSRegisterFile();
     }
 
     public void loadMemory() {

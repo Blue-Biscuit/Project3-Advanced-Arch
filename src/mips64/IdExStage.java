@@ -9,6 +9,9 @@ public class IdExStage {
     int regAData;
     int regBData;
     int immediate;
+    
+    Register regA;
+    Register regB;
 
     public IdExStage(PipelineSimulator sim) {
         simulator = sim;
@@ -16,7 +19,7 @@ public class IdExStage {
 
     int getIntRegister(int regNum) {
         // todo - add supporting code
-        return 0;
+        return this.simulator.regFile.get("R" + regNum).getValue();
     }
 
     public void update() {
