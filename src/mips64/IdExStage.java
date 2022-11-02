@@ -9,6 +9,7 @@ public class IdExStage {
     int regAData;
     int regBData;
     int immediate;
+    Instruction instr;
 
     public IdExStage(PipelineSimulator sim) {
         simulator = sim;
@@ -24,5 +25,18 @@ public class IdExStage {
         // previous (IF/ID).
         instPC = simulator.ifId.instPC;
         opcode = simulator.ifId.opcode;
+        instr = simulator.ifId.instr;
+        
+        // Load fields depending on the type of instruction format.
+        if (instr instanceof ITypeInst) {
+            ITypeInst iInst = (ITypeInst)instr;
+            regAData = iInst.getRS();
+            regBData = iInst.getRT();
+            immediate = iInst.getImmed();
+        }
+        else if (instr instanceof RTypeInst) {
+            RTypeInst rInst = (RTypeInst)instr;
+        }
     }
+    
 }
