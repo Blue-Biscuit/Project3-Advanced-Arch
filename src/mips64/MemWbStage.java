@@ -51,15 +51,13 @@ public class MemWbStage {
     
     private void loadMem() {
         if (opcode == Instruction.INST_LW && regB != null) {
-            loadIntData = simulator.memory.getIntDataAtAddr(regB.getValue());
+            loadIntData = simulator.memory.getIntDataAtAddr(aluIntData);
         }
     }
     
     private void storeMem() {
         if (opcode == Instruction.INST_SW) {
-            int addr = simulator.exMem.aluIntData;
-            
-            simulator.memory.setIntDataAtAddr(addr, regB.getValue());
+            simulator.memory.setIntDataAtAddr(aluIntData, regB.getValue());
         }
     }
     
