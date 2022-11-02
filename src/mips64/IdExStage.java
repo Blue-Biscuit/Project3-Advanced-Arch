@@ -54,9 +54,11 @@ public class IdExStage {
             regResult = this.simulator.regFile.get("R" + rInst.getRD());
             regA = this.simulator.regFile.get("R" + rInst.getRS());
             regB = this.simulator.regFile.get("R" + rInst.getRT());
+            immediate = rInst.getShamt();
             
             regAData = regA.getValue();
             regBData = regB.getValue();
+            
         }
         else if (instr instanceof JTypeInst) {
             JTypeInst jInst = (JTypeInst)instr;
