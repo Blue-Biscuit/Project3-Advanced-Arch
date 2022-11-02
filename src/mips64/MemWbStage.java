@@ -34,7 +34,7 @@ public class MemWbStage {
         opcode = simulator.exMem.opcode;
         aluIntData = simulator.exMem.aluIntData;
         regB = simulator.exMem.regB;
-        regResult = simulator.exMem.regA;
+        regResult = simulator.exMem.regResult;
         shouldWriteback = simulator.exMem.shouldWriteback;
         
         // Get loadIntData
