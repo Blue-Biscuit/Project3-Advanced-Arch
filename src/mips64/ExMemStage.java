@@ -13,7 +13,10 @@ public class ExMemStage {
     Register regB;
     Register regResult;
     
-    boolean raZero = false; // The "Zero?" Block on the diagram.
+    /**
+     * True if the instruction is a taken branch.
+     */
+    boolean branching = false;
     
 
     public ExMemStage(PipelineSimulator sim) {
@@ -33,14 +36,28 @@ public class ExMemStage {
         runALU();
         
         if (shouldWriteback) {
-            if (regA != null) {
-                raZero = regA.getValue() == 0;
-            }
+            branching = branchWasTaken();
         }
     }
     
     public boolean branchWasTaken() {
-        return raZero;
+       
+        switch (opcode) {
+            case Instruction.INST_BEQ:
+                return regA.getValue() == regB.getValue();
+            case Instruction.INST_BNE:
+                return regA.getValue() != regB.getValue();
+            case Instruction.INST_BLTZ:
+                return regA.getValue() < 0;
+            case Instruction.INST_BLEZ:
+                return regA.getValue() <= 0;
+            case Instruction.INST_BGEZ:
+                return regA.getValue() >= 0;
+            case Instruction.INST_BGTZ:
+                return regA.getValue() > 0;
+            default:
+                return false;
+        }
     }
     
     void runALU() {

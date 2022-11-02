@@ -78,14 +78,14 @@ public class MemWbStage {
      * Resolves a branching instruction.
      */
     private void resolveBranch() {
-        if (isBranching(opcode) && simulator.exMem.branchWasTaken()) {
+        if (simulator.exMem.branching) {
             System.out.println("Branch was taken.");
             // "Squash" the previous instructions.
             simulator.idEx.shouldWriteback = false;
             simulator.ifId.shouldWriteback = false;
             
             // Load the new PC value.
-            simulator.pc.pc = aluIntData;
+            simulator.pc.setPC(aluIntData - 4); // -4, b/c the PC will incr. on update.
         }
         else if (isBranching(opcode)) {
             System.out.println("Branch was not taken.");
