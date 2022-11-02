@@ -92,7 +92,7 @@ public class MemWbStage {
                 simulator.pc.setPC(regA.getValue());
             }
             else {
-                simulator.pc.setPC(aluIntData);
+                simulator.pc.setPC(aluIntData - 4);
             }
             
             if (opcode == Instruction.INST_JAL || opcode == Instruction.INST_JALR) {
