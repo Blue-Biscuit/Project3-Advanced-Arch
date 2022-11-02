@@ -86,7 +86,7 @@ public class MemWbStage {
             simulator.ifId.shouldWriteback = false;
             
             // Load the new PC value.
-            simulator.pc.setPC(aluIntData - 4); // -4, b/c the PC will incr. on update.
+            simulator.pc.setPC(aluIntData);
         }
         else if (isBranching(opcode)) {
             System.out.println("Branch was not taken.");
