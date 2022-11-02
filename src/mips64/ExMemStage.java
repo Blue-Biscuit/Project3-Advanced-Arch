@@ -9,6 +9,12 @@ public class ExMemStage {
     int aluIntData;
     int storeIntData;
     
+    Register regA;
+    Register regB;
+    Register regResult;
+    
+    boolean raZero = false; // The "Zero?" Block on the diagram.
+    
 
     public ExMemStage(PipelineSimulator sim) {
         simulator = sim;
@@ -19,7 +25,22 @@ public class ExMemStage {
         // previous (ID/EX).
         instPC = simulator.idEx.instPC;
         opcode = simulator.idEx.opcode;
+        regA = simulator.idEx.regA;
+        regB = simulator.idEx.regB;
+        regResult = simulator.idEx.regResult;
         
+        runALU();
+        
+        if (regA != null) {
+            raZero = regA.getValue() == 0;
+        }
+    }
+    
+    public boolean branchWasTaken() {
+        return raZero;
+    }
+    
+    void runALU() {
         switch (opcode) {
             case Instruction.INST_ADD:
             case Instruction.INST_ADDI:
@@ -73,20 +94,17 @@ public class ExMemStage {
         }
     }
     
-    public boolean branchWasTaken() {
-        return false; // TODO: unimplemented.
-    }
-    
     /**
      * Gets the "top" input to the ALU, either PC + 4 or a register.
      * @return 
      */
     private int aluTopInput(int opcode) {
+        
         if (isBranching(opcode)) {
             return simulator.idEx.instPC + 4;
         }
         else {
-            return simulator.idEx.regAData;
+            return (regA == null) ? 0 : regA.getValue();
         }
     }
     
@@ -99,7 +117,7 @@ public class ExMemStage {
             return simulator.idEx.immediate;
         }
         else {
-            return simulator.idEx.regBData;
+            return (regB == null) ? 0 : regB.getValue();
         }
     }
     
