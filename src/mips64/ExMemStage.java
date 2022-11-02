@@ -154,13 +154,17 @@ public class ExMemStage {
                 || (opcode == Instruction.INST_SRA);
     }
     
-    private boolean isBranching(int opcode) {
+     private boolean isBranching(int opcode) {
         return (opcode == Instruction.INST_BEQ) 
                 || (opcode == Instruction.INST_BNE)
                 || (opcode == Instruction.INST_BLTZ)
                 || (opcode == Instruction.INST_BLEZ)
                 || (opcode == Instruction.INST_BGEZ)
-                || (opcode == Instruction.INST_BGTZ);
+                || (opcode == Instruction.INST_BGTZ)
+                || (opcode == Instruction.INST_J)
+                || (opcode == Instruction.INST_JR)
+                || (opcode == Instruction.INST_JALR)
+                || (opcode == Instruction.INST_JAL);
     }
     
 }
