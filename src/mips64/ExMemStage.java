@@ -55,6 +55,11 @@ public class ExMemStage {
                 return regA.getValue() >= 0;
             case Instruction.INST_BGTZ:
                 return regA.getValue() > 0;
+            case Instruction.INST_J:
+            case Instruction.INST_JR:
+            case Instruction.INST_JAL:
+            case Instruction.INST_JALR:
+                return true;
             default:
                 return false;
         }
