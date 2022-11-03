@@ -16,7 +16,10 @@ public class MemWbStage {
     int loadIntDataOld;
     int opcodeOld;
     boolean shouldWriteBackOld;
-
+    
+    boolean interlockVictimOld = false;
+    boolean interlockVictim = false;
+    
     Register regA;
     Register regB;
     Register regResult;
@@ -39,9 +42,10 @@ public class MemWbStage {
         loadIntDataOld = loadIntData;
         aluIntDataOld = aluIntData;
         regResultOld = regResult;
+        interlockVictimOld = interlockVictim;
         
         // Clear reservations for old registers.
-        if (regResultOld != null) {
+        if (regResultOld != null && !interlockVictimOld) {
             simulator.regFile.dereserve(regResultOld);
         }
         
@@ -59,6 +63,7 @@ public class MemWbStage {
         opcode = simulator.exMem.opcode;
         aluIntData = simulator.exMem.aluIntData;
         regA = simulator.exMem.regA;
+        interlockVictim = simulator.exMem.interlockVictim;
         if (regA != null) {
             regA = regA.clone();
             if (simulator.regFile.isReserved(regA)) {
@@ -75,6 +80,11 @@ public class MemWbStage {
         }
         
         regResult = simulator.exMem.regResult;
+        if (regResult != null) {
+            if (simulator.regFile.isReserved(regResult)) {
+                simulator.regFile.reserve(regResult, STAGE_NUMBER);
+            }
+        }
         shouldWriteback = simulator.exMem.shouldWriteback;
 
         // Halt if halt

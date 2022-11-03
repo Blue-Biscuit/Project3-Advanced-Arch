@@ -10,7 +10,8 @@ public class ExMemStage {
     int opcode;
     int aluIntData;
     int storeIntData;
-
+    boolean interlockVictim = false;
+    
     Register regA;
     Register regB;
     Register regResult;
@@ -29,6 +30,7 @@ public class ExMemStage {
         // previous (ID/EX).
         instPC = simulator.idEx.instPC;
         opcode = simulator.idEx.opcode;
+        interlockVictim = simulator.idEx.interlockVictim;
 
         regA = simulator.idEx.regA;
         if (regA != null) {

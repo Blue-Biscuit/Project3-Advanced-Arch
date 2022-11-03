@@ -11,6 +11,7 @@ public class IdExStage {
     int regAData;
     int regBData;
     int immediate;
+    boolean interlockVictim = false;
     
     Register regA;
     Register regB;
@@ -66,6 +67,10 @@ public class IdExStage {
         if (doesInterlock()) {
             shouldWriteback = false;
             simulator.ifId.interlock = true;
+            interlockVictim = true;
+        }
+        else {
+            resolveDependencies();
         }
     }
 
@@ -93,16 +98,31 @@ public class IdExStage {
             }
         }
         
-        // Check for interlock on source reg.
-        else if (regResult != null && regResult != regB) {
-            int reservation = simulator.regFile.getReservation(regResult);
-
-            if (reservation == ExMemStage.STAGE_NUMBER && simulator.exMem.opcode == Instruction.INST_LW) {
-                return true;
-            }
-        }
-        
         return false;
     }
+    
+    private void resolveDependencies() {
+        resolveDependencies(regA);
+        resolveDependencies(regB);
+    }
 
+    private void resolveDependencies(Register r) {
+        if (r == null) {
+            return;
+        }
+        
+        int reservation = simulator.regFile.getReservation(r);
+        
+        if (reservation == ExMemStage.STAGE_NUMBER) {
+            r.setValue(simulator.exMem.aluIntData);
+        }
+        else if (reservation == MemWbStage.STAGE_NUMBER) {
+            if (simulator.memWb.opcode == Instruction.INST_LW) {
+                r.setValue(simulator.memWb.loadIntData);
+            }
+            else {
+                r.setValue(simulator.memWb.aluIntData);
+            }
+        }
+    }
 }
