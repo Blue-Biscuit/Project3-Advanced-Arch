@@ -29,17 +29,17 @@ public class ExMemStage {
         // previous (ID/EX).
         instPC = simulator.idEx.instPC;
         opcode = simulator.idEx.opcode;
-        
+
         regA = simulator.idEx.regA;
         if (regA != null) {
             regA = regA.clone();
         }
-        
+
         regB = simulator.idEx.regB;
         if (regB != null) {
             regB = regB.clone();
         }
-        
+
         regResult = simulator.idEx.regResult;
         shouldWriteback = simulator.idEx.shouldWriteback;
 
@@ -47,6 +47,11 @@ public class ExMemStage {
 
         if (shouldWriteback) {
             branching = branchWasTaken();
+            Register toReserve = getRegToClaim();
+            
+            if (toReserve != null) {
+                simulator.regFile.reserve(toReserve, STAGE_NUMBER);
+            }
         }
     }
 
@@ -185,4 +190,35 @@ public class ExMemStage {
                 || (opcode == Instruction.INST_JAL);
     }
 
+    /**
+     * Gets the register which needs to be resereved by an instruction, if any.
+     *
+     * @return The register to claim, or null if no registers need to be
+     * claimed.
+     */
+    private Register getRegToClaim() {
+        boolean writes
+                = !((opcode == Instruction.INST_SW)
+                || (opcode == Instruction.INST_BEQ)
+                || (opcode == Instruction.INST_BNE)
+                || (opcode == Instruction.INST_BLTZ)
+                || (opcode == Instruction.INST_BLEZ)
+                || (opcode == Instruction.INST_BGEZ)
+                || (opcode == Instruction.INST_BGTZ)
+                || (opcode == Instruction.INST_J)
+                || (opcode == Instruction.INST_JR)
+                || (opcode == Instruction.INST_NOP)
+                || (opcode == Instruction.INST_HALT));
+        
+        if (writes) {
+            if (opcode == Instruction.INST_JAL || opcode == Instruction.INST_JALR) {
+                return regA;
+            }
+            else {
+                return regResult.clone();
+            }
+        }
+        
+        return null;
+    }
 }

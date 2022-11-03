@@ -11,12 +11,16 @@ public class MemWbStage {
     int opcode;
     int aluIntData;
     int loadIntData;
+    
+    int aluIntDataOld;
+    int loadIntDataOld;
+    int opcodeOld;
+    boolean shouldWriteBackOld;
 
     Register regA;
     Register regB;
     Register regResult;
 
-    Register regBOld;
     Register regResultOld;
 
     public MemWbStage(PipelineSimulator sim) {
@@ -28,22 +32,46 @@ public class MemWbStage {
     }
 
     public void update() {
+        
+        // Copy last cycle's values into the "old" fields.
+        shouldWriteBackOld = shouldWriteback;
+        opcodeOld = opcode;
+        loadIntDataOld = loadIntData;
+        aluIntDataOld = aluIntData;
+        regResultOld = regResult;
+        
+        // Clear reservations for old registers.
+        if (regResultOld != null) {
+            simulator.regFile.dereserve(regResultOld);
+        }
+        
+        // Write back and update old values.
+        if (shouldWriteBackOld) {
+            if (writesBack(opcodeOld)) {
+                int wb = writeBackVal(opcodeOld, loadIntDataOld, aluIntDataOld);
+                regResultOld.setValue(wb);
+            }
+        }
+        
         // Set the instruction values of this pipeline reg to the values of the 
         // previous (EX/MEM).
-        regBOld = regB;
-        regResultOld = regResult;
-
         instPC = simulator.exMem.instPC;
         opcode = simulator.exMem.opcode;
         aluIntData = simulator.exMem.aluIntData;
         regA = simulator.exMem.regA;
         if (regA != null) {
             regA = regA.clone();
+            if (simulator.regFile.isReserved(regA)) {
+                simulator.regFile.reserve(regA, STAGE_NUMBER);
+            }
         }
         
         regB = simulator.exMem.regB;
         if (regB != null) {
             regB = regB.clone();
+            if (simulator.regFile.isReserved(regB)) {
+                simulator.regFile.reserve(regB, STAGE_NUMBER);
+            }
         }
         
         regResult = simulator.exMem.regResult;
@@ -53,15 +81,14 @@ public class MemWbStage {
         if (opcode == Instruction.INST_HALT) {
             halted = true;
         }
+        
+        
 
         // Get loadIntData
         if (shouldWriteback) {
-
             loadMem();
             storeMem();
-            if (writesBack()) {
-                writeBack();
-            }
+            
             resolveBranch();
         }
 
@@ -79,16 +106,16 @@ public class MemWbStage {
         }
     }
 
-    private void writeBack() {
+    private int writeBackVal(int opcode, int ldData, int aluData) {
         int toWB;
 
         if (opcode == Instruction.INST_LW) {
-            toWB = loadIntData;
+            toWB = ldData;
         } else {
-            toWB = aluIntData;
+            toWB = aluData;
         }
 
-        regResult.setValue(toWB);
+        return toWB;
     }
 
     /**
@@ -134,7 +161,7 @@ public class MemWbStage {
      *
      * @return
      */
-    private boolean writesBack() {
+    private boolean writesBack(int opcode) {
         return !(isBranching(opcode)
                 || opcode == Instruction.INST_NOP
                 || opcode == Instruction.INST_HALT

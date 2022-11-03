@@ -79,6 +79,10 @@ public class RegisterFile {
         throw new InvalidRegisterException("No register entitled '" + name + "'");
     }
     
+    public int getReservation(Register reg) {
+        return getReservation(reg.getName());
+    }
+    
     public void reserve(String name, int reservation) {
         for (int i = 0; i < registers.length; i++) {
             if (registers[i].getName().equals(name)) {
@@ -90,8 +94,16 @@ public class RegisterFile {
         throw new InvalidRegisterException("No register entitled '" + name + "'");
     }
     
+    public void reserve(Register reg, int reservation) {
+        reserve(reg.getName(), reservation);
+    }
+    
     public void dereserve(String name) {
         reserve(name, 0);
+    }
+    
+    public void dereserve(Register reg) {
+        dereserve(reg.getName());
     }
     
     public boolean isReserved(String name) {
@@ -102,5 +114,9 @@ public class RegisterFile {
         }
         
         throw new InvalidRegisterException("No register entitled '" + name + "'");
+    }
+    
+    public boolean isReserved(Register reg) {
+        return isReserved(reg.getName());
     }
 }
