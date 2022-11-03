@@ -37,7 +37,15 @@ public class MemWbStage {
         opcode = simulator.exMem.opcode;
         aluIntData = simulator.exMem.aluIntData;
         regA = simulator.exMem.regA;
+        if (regA != null) {
+            regA = regA.clone();
+        }
+        
         regB = simulator.exMem.regB;
+        if (regB != null) {
+            regB = regB.clone();
+        }
+        
         regResult = simulator.exMem.regResult;
         shouldWriteback = simulator.exMem.shouldWriteback;
 

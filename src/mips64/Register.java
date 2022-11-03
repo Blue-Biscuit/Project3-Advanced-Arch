@@ -56,6 +56,7 @@ public class Register {
     /**
      * Gets the value of the register.
      *
+     *
      * @return The value.
      */
     public int getValue() {
@@ -112,5 +113,16 @@ public class Register {
      */
     public void dereserve() {
         reservedBy = 0;
+    }
+
+    /**
+     * Clones a register instance.
+     *
+     * @return The clone.
+     */
+    public Register clone() {
+        Register c = new Register(this.name, this.value);
+        c.reserve(this.reservedBy);
+        return c;
     }
 }

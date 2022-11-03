@@ -40,9 +40,9 @@ public class IdExStage {
             regAData = iInst.getRS();
             regBData = iInst.getRT();
             
-            regA = this.simulator.regFile.get("R" + iInst.getRS());
-            regB = this.simulator.regFile.get("R" + iInst.getRT());
-            regResult = regB;
+            regA = this.simulator.regFile.get("R" + iInst.getRS()).clone();
+            regResult = this.simulator.regFile.get("R" + iInst.getRT());
+            regB = regResult.clone();
             
             regAData = regA.getValue();
             regBData = regB.getValue();
@@ -52,8 +52,8 @@ public class IdExStage {
         else if (instr instanceof RTypeInst) {
             RTypeInst rInst = (RTypeInst)instr;
             regResult = this.simulator.regFile.get("R" + rInst.getRD());
-            regA = this.simulator.regFile.get("R" + rInst.getRS());
-            regB = this.simulator.regFile.get("R" + rInst.getRT());
+            regA = this.simulator.regFile.get("R" + rInst.getRS()).clone();
+            regB = this.simulator.regFile.get("R" + rInst.getRT()).clone();
             immediate = rInst.getShamt();
             
             regAData = regA.getValue();

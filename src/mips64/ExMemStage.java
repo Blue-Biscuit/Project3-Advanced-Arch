@@ -29,8 +29,17 @@ public class ExMemStage {
         // previous (ID/EX).
         instPC = simulator.idEx.instPC;
         opcode = simulator.idEx.opcode;
+        
         regA = simulator.idEx.regA;
+        if (regA != null) {
+            regA = regA.clone();
+        }
+        
         regB = simulator.idEx.regB;
+        if (regB != null) {
+            regB = regB.clone();
+        }
+        
         regResult = simulator.idEx.regResult;
         shouldWriteback = simulator.idEx.shouldWriteback;
 
