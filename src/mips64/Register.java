@@ -73,56 +73,12 @@ public class Register {
     }
 
     /**
-     * Returns the ID of the pipeline stage which has reserved this register.
-     *
-     * @return The integer identifier of the pipeline stage which is currently
-     * writing this register.
-     */
-    public int reservedBy() {
-        return reservedBy;
-    }
-
-    /**
-     * Reserves the register for writing.
-     *
-     * @param stage The pipeline stage reserving the register
-     */
-    public void reserve(int stage) {
-        reservedBy = stage;
-    }
-
-    /**
-     * Increments the reservation by 1, for when a reserved register is
-     * transferred between stages.
-     */
-    public void incReservation() {
-        reservedBy++;
-    }
-
-    /**
-     * True if this register has been reserved for writing.
-     *
-     * @return True if this register has been reserved for writing.
-     */
-    public boolean isReserved() {
-        return reservedBy != 0;
-    }
-
-    /**
-     * "Un-reserves" the register for writing, once a dependency has cleared.
-     */
-    public void dereserve() {
-        reservedBy = 0;
-    }
-
-    /**
      * Clones a register instance.
      *
      * @return The clone.
      */
     public Register clone() {
         Register c = new Register(this.name, this.value);
-        c.reserve(this.reservedBy);
         return c;
     }
 }
