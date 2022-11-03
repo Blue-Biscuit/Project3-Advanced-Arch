@@ -12,7 +12,7 @@ package mips64;
 public class RegisterFile {
 
     private Register[] registers;
-    private boolean[] inUse;
+    private int[] reservations;
 
     private RegisterFile(Register[] registers) {
         // Null checking.
@@ -27,10 +27,10 @@ public class RegisterFile {
         }
 
         this.registers = registers;
-        this.inUse = new boolean[registers.length];
+        this.reservations = new int[registers.length];
 
         for (int i = 0; i < registers.length; i++) {
-            this.inUse[i] = false;
+            this.reservations[i] = 0;
         }
     }
 
@@ -66,6 +66,41 @@ public class RegisterFile {
             }
         }
 
+        throw new InvalidRegisterException("No register entitled '" + name + "'");
+    }
+    
+    public int getReservation(String name) {
+        for (int i = 0; i < registers.length; i++) {
+            if (registers[i].getName().equals(name)) {
+                return reservations[i];
+            }
+        }
+        
+        throw new InvalidRegisterException("No register entitled '" + name + "'");
+    }
+    
+    public void reserve(String name, int reservation) {
+        for (int i = 0; i < registers.length; i++) {
+            if (registers[i].getName().equals(name)) {
+                reservations[i] = reservation;
+                return;
+            }
+        }
+        
+        throw new InvalidRegisterException("No register entitled '" + name + "'");
+    }
+    
+    public void dereserve(String name) {
+        reserve(name, 0);
+    }
+    
+    public boolean isReserved(String name) {
+        for (int i = 0; i < registers.length; i++) {
+            if (registers[i].getName().equals(name)) {
+                return reservations[i] != 0;
+            }
+        }
+        
         throw new InvalidRegisterException("No register entitled '" + name + "'");
     }
 }
