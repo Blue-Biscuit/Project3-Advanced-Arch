@@ -1,6 +1,7 @@
 package mips64;
 
 public class IdExStage {
+    static final int STAGE_NUMBER = 2;
 
     PipelineSimulator simulator;
     boolean shouldWriteback = false;
@@ -22,7 +23,6 @@ public class IdExStage {
     }
 
     int getIntRegister(int regNum) {
-        // todo - add supporting code
         return this.simulator.regFile.get("R" + regNum).getValue();
     }
 

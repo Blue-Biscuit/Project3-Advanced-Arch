@@ -2,6 +2,8 @@ package mips64;
 
 public class MemWbStage {
 
+    static final int STAGE_NUMBER = 4;
+
     PipelineSimulator simulator;
     boolean halted;
     boolean shouldWriteback = false;
@@ -9,11 +11,11 @@ public class MemWbStage {
     int opcode;
     int aluIntData;
     int loadIntData;
-    
+
     Register regA;
     Register regB;
     Register regResult;
-    
+
     Register regBOld;
     Register regResultOld;
 
@@ -30,7 +32,7 @@ public class MemWbStage {
         // previous (EX/MEM).
         regBOld = regB;
         regResultOld = regResult;
-        
+
         instPC = simulator.exMem.instPC;
         opcode = simulator.exMem.opcode;
         aluIntData = simulator.exMem.aluIntData;
@@ -38,12 +40,12 @@ public class MemWbStage {
         regB = simulator.exMem.regB;
         regResult = simulator.exMem.regResult;
         shouldWriteback = simulator.exMem.shouldWriteback;
-        
+
         // Halt if halt
         if (opcode == Instruction.INST_HALT) {
             halted = true;
         }
-        
+
         // Get loadIntData
         if (shouldWriteback) {
 
@@ -54,34 +56,33 @@ public class MemWbStage {
             }
             resolveBranch();
         }
-        
+
     }
-    
+
     private void loadMem() {
         if (opcode == Instruction.INST_LW && regB != null) {
             loadIntData = simulator.memory.getIntDataAtAddr(aluIntData);
         }
     }
-    
+
     private void storeMem() {
         if (opcode == Instruction.INST_SW) {
             simulator.memory.setIntDataAtAddr(aluIntData, regB.getValue());
         }
     }
-    
+
     private void writeBack() {
         int toWB;
-        
+
         if (opcode == Instruction.INST_LW) {
             toWB = loadIntData;
-        }
-        else {
+        } else {
             toWB = aluIntData;
         }
-        
+
         regResult.setValue(toWB);
     }
-    
+
     /**
      * Resolves a branching instruction.
      */
@@ -91,26 +92,24 @@ public class MemWbStage {
             // "Squash" the previous instructions.
             simulator.idEx.shouldWriteback = false;
             simulator.ifId.shouldWriteback = false;
-            
+
             // Load the new PC value.
             if (opcode == Instruction.INST_JR || opcode == Instruction.INST_JALR) {
                 simulator.pc.setPC(regA.getValue());
-            }
-            else {
+            } else {
                 simulator.pc.setPC(aluIntData);
             }
-            
+
             if (opcode == Instruction.INST_JAL || opcode == Instruction.INST_JALR) {
                 simulator.regFile.get("R31").setValue(instPC + 4);
             }
-        }
-        else if (isBranching(opcode)) {
+        } else if (isBranching(opcode)) {
             System.out.println("Branch was not taken.");
         }
     }
-    
+
     private boolean isBranching(int opcode) {
-        return (opcode == Instruction.INST_BEQ) 
+        return (opcode == Instruction.INST_BEQ)
                 || (opcode == Instruction.INST_BNE)
                 || (opcode == Instruction.INST_BLTZ)
                 || (opcode == Instruction.INST_BLEZ)
@@ -121,14 +120,15 @@ public class MemWbStage {
                 || (opcode == Instruction.INST_JALR)
                 || (opcode == Instruction.INST_JAL);
     }
-    
+
     /**
      * True if the opcode is an instruction which writes to register.
-     * @return 
+     *
+     * @return
      */
     private boolean writesBack() {
-        return !(isBranching(opcode) 
-                || opcode == Instruction.INST_NOP 
+        return !(isBranching(opcode)
+                || opcode == Instruction.INST_NOP
                 || opcode == Instruction.INST_HALT
                 || opcode == Instruction.INST_SW);
     }
