@@ -210,15 +210,12 @@ public class ExMemStage {
                 || (opcode == Instruction.INST_J)
                 || (opcode == Instruction.INST_JR)
                 || (opcode == Instruction.INST_NOP)
-                || (opcode == Instruction.INST_HALT));
+                || (opcode == Instruction.INST_HALT)
+                || (opcode == Instruction.INST_JAL)
+                || (opcode == Instruction.INST_JALR));
         
         if (writes) {
-            if (opcode == Instruction.INST_JAL || opcode == Instruction.INST_JALR) {
-                return regA;
-            }
-            else {
                 return regResult.clone();
-            }
         }
         
         return null;

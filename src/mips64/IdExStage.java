@@ -12,7 +12,7 @@ public class IdExStage {
     int regBData;
     int immediate;
     boolean interlockVictim = false;
-    
+
     Register regA;
     Register regB;
     Register regResult;
@@ -64,13 +64,12 @@ public class IdExStage {
             JTypeInst jInst = (JTypeInst) instr;
             immediate = jInst.getOffset();
         }
-        
+
         if (doesInterlock()) {
             shouldWriteback = false;
             simulator.ifId.interlock = true;
             interlockVictim = true;
-        }
-        else {
+        } else {
             resolveDependencies();
         }
     }
@@ -84,24 +83,24 @@ public class IdExStage {
         // Check for interlock on reg A.
         if (regA != null) {
             int reservation = simulator.regFile.getReservation(regA);
-            
-            if (reservation == ExMemStage.STAGE_NUMBER && simulator.exMem.opcode == Instruction.INST_LW) {
+
+            if (reservation == ExMemStage.STAGE_NUMBER && simulator.exMem.opcode == Instruction.INST_LW && simulator.exMem.shouldWriteback == true) {
                 return true;
             }
         }
-        
+
         // Check for interlock on reg B.
         if (regB != null) {
             int reservation = simulator.regFile.getReservation(regB);
 
-            if (reservation == ExMemStage.STAGE_NUMBER && simulator.exMem.opcode == Instruction.INST_LW) {
+            if (reservation == ExMemStage.STAGE_NUMBER && simulator.exMem.opcode == Instruction.INST_LW && simulator.exMem.shouldWriteback == true) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     private void resolveDependencies() {
         resolveDependencies(regA);
         resolveDependencies(regB);
@@ -111,17 +110,15 @@ public class IdExStage {
         if (r == null) {
             return;
         }
-        
+
         int reservation = simulator.regFile.getReservation(r);
-        
+
         if (reservation == ExMemStage.STAGE_NUMBER) {
             r.setValue(simulator.exMem.aluIntData);
-        }
-        else if (reservation == MemWbStage.STAGE_NUMBER) {
+        } else if (reservation == MemWbStage.STAGE_NUMBER) {
             if (simulator.memWb.opcode == Instruction.INST_LW) {
                 r.setValue(simulator.memWb.loadIntData);
-            }
-            else {
+            } else {
                 r.setValue(simulator.memWb.aluIntData);
             }
         }

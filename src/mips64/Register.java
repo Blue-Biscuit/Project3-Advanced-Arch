@@ -15,12 +15,6 @@ public class Register {
     private int value;
 
     /**
-     * The pipeline stage which has reserved this register for writing. 0 if the
-     * register has not been reserved.
-     */
-    private int reservedBy = 0;
-
-    /**
      * Initializes a register.
      *
      * @param name The name of the register.
