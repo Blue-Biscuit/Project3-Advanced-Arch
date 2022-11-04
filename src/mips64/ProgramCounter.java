@@ -2,28 +2,30 @@ package mips64;
 
 public class ProgramCounter {
 
-  PipelineSimulator simulator;
-  int pc;
+    PipelineSimulator simulator;
+    int pc;
 
-  public ProgramCounter(PipelineSimulator sim) {
-    pc = 0;
-    simulator = sim;
-  }
 
-  public int getPC () {
-    return pc;
-  }
+    public ProgramCounter(PipelineSimulator sim) {
+        pc = 0;
+        simulator = sim;
+    }
 
-  public void setPC (int newPC) {
-    pc = newPC;
-  }
+    public int getPC() {
+        return pc;
+    }
 
-  public void incrPC () {
-    pc += 4;
-  }
+    public void setPC(int newPC) {
+        pc = newPC;
+    }
 
-  public void update() {
-      // Increment the program counter to the next MAU.
-      incrPC();
-  }
+    public void incrPC() {
+        pc += 4;
+    }
+
+    public void update() {
+        // Increment the program counter to the next MAU.
+        
+        incrPC();
+    }
 }
