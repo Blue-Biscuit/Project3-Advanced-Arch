@@ -94,6 +94,7 @@ public class MemWbStage {
                 halted = true;
             }
         
+            
             loadMem();
             storeMem();
             
