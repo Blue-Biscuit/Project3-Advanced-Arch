@@ -34,6 +34,7 @@ public class IdExStage {
         instPC = simulator.ifId.instPC;
         opcode = simulator.ifId.opcode;
         instr = simulator.ifId.instr;
+        interlockVictim = false;
 
         // Load fields depending on the type of instruction format.
         if (instr instanceof ITypeInst) {

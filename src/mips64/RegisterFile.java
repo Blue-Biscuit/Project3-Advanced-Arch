@@ -11,8 +11,10 @@ package mips64;
  */
 public class RegisterFile {
 
-    private Register[] registers;
+    private final Register[] registers;
     private int[] reservations;
+    
+    public static final int NO_RESERVATION = 0;
 
     private RegisterFile(Register[] registers) {
         // Null checking.
@@ -99,7 +101,7 @@ public class RegisterFile {
     }
     
     public void dereserve(String name) {
-        reserve(name, 0);
+        reserve(name, NO_RESERVATION);
     }
     
     public void dereserve(Register reg) {
