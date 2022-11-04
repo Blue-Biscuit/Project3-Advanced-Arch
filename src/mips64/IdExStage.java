@@ -91,7 +91,7 @@ public class IdExStage {
         }
         
         // Check for interlock on reg B.
-        else if (regB != null) {
+        if (regB != null) {
             int reservation = simulator.regFile.getReservation(regB);
 
             if (reservation == ExMemStage.STAGE_NUMBER && simulator.exMem.opcode == Instruction.INST_LW) {
