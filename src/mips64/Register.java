@@ -14,6 +14,7 @@ public class Register {
     private String name;
     private int value;
 
+
     /**
      * Initializes a register.
      *

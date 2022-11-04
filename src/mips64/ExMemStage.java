@@ -216,6 +216,7 @@ public class ExMemStage {
         
         if (writes) {
                 return regResult.clone();
+
         }
         
         return null;
